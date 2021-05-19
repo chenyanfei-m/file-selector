@@ -14,10 +14,12 @@ export const COMMON_MIME_TYPES = new Map([
     ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
 ]);
 
+import nodePath from 'path';
+
 
 export function toFileWithPath(file: FileWithPath, path?: string): FileWithPath {
     const f = withMimeType(file);
-    if (typeof f.path !== 'string') { // on electron, path is already set to the absolute path
+    if (typeof f.path !== 'string' || nodePath.isAbsolute(f.path)) { // on electron, path is already set to the absolute path
         const {webkitRelativePath} = file as FileWithWebkitPath;
         Object.defineProperty(f, 'path', {
             value: typeof path === 'string'
